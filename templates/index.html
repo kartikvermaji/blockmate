@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Firewall Control Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h2 class="mb-4">🛡️ Firewall Control Panel</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/">
+      <div class="mb-3">
+        <label for="block_domain" class="form-label">Block Website</label>
+        <input type="text" class="form-control" name="block_domain" placeholder="e.g., instagram.com" required>
+      </div>
+      <button type="submit" class="btn btn-danger">Block</button>
+    </form>
+
+    <hr>
+
+    <form method="POST" action="/unblock">
+      <div class="mb-3">
+        <label for="unblock_domain" class="form-label">Unblock Website</label>
+        <input type="text" class="form-control" name="unblock_domain" placeholder="e.g., instagram.com" required>
+      </div>
+      <button type="submit" class="btn btn-success">Unblock</button>
+    </form>
+
+    <hr>
+    <h5>Currently Blocked Domains:</h5>
+    <ul class="list-group">
+      {% for domain, ips in blocked.items() %}
+        <li class="list-group-item">
+          <strong>{{ domain }}</strong>
+          <small class="text-muted">({{ ips|join(', ') }})</small>
+        </li>
+      {% else %}
+        <li class="list-group-item">No domains currently blocked.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
